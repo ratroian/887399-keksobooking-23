@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Ruslan Troyan](https://up.htmlacademy.ru/javascript/23/user/887399).
-* Наставник: `Неизвестно`.
+* Наставник: [Василий Подоплелов](https://htmlacademy.ru/profile/id348441).
 
 ---
 

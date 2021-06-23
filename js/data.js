@@ -16,7 +16,6 @@ const toAddZero = (integer) => integer < 10 && integer >=0 ? `0${integer}` : int
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 const getAvatarIndex = () => getRandomPositiveInteger(0, ID_AVATARS.length - 1);
 const avatarsIndexes = [];
-
 const getUniqAvatarIndex = () => {
   let randomAvatarIndex = getAvatarIndex();
 

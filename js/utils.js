@@ -16,9 +16,11 @@ const getRandomPositiveInteger =(first, second) => {
 
 const createImage = (source) => {
   const imageElement = document.createElement('img');
+
   imageElement.classList.add('popup__photo');
   imageElement.width='45';
   imageElement.height='40';
+  imageElement.alt='Фотография жилья';
   imageElement.src = source;
 
   return imageElement;
@@ -26,6 +28,7 @@ const createImage = (source) => {
 
 const createListItem = (featureName) => {
   const listElement = document.createElement('li');
+
   listElement.className = `popup__feature popup__feature--${featureName}`;
 
   return listElement;

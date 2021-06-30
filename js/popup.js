@@ -15,8 +15,6 @@ const getPhotosListFragment = (photos) => {
     popupPhotosFragment.appendChild(photoElement);
   });
 
-  popupPhotos.appendChild(popupPhotosFragment);
-
   return popupPhotosFragment;
 };
 

@@ -8,7 +8,6 @@ const OFFER_TYPES = {
   'bungalow': 'Бунгало',
   'hotel': 'Отель',
 };
-
 const OFFER_CHECKINS = ['12:00', '13:00', '14:00'];
 const OFFER_CHECKOUTS = ['12:00', '13:00', '14:00'];
 const OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];

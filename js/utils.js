@@ -34,4 +34,21 @@ const createListItem = (featureName) => {
   return listElement;
 };
 
-export {getRandomPositiveFloat, getRandomPositiveInteger, createImage, createListItem};
+const addClassName = (element, className) => {
+  element.classList.add(className);
+};
+
+const removeClassName = (element, className) => {
+  element.classList.remove(className);
+};
+
+const addAttributeDisabled = (elements) => {
+  elements.forEach((element) => element.setAttribute('disabled', 'disabled'));
+};
+
+const removeAttributeDisabled = (elements) => {
+  elements.forEach((element) => element.removeAttribute('disabled', 'disabled'));
+};
+
+export {getRandomPositiveFloat, getRandomPositiveInteger, createImage, createListItem,
+  addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled};

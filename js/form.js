@@ -1,7 +1,7 @@
 import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled} from './utils.js';
 
 const DISABLED_FORM_CLASSNAME = 'ad-form--disabled';
-const MAX_PRICE_VALUE = '1 000 000';
+const MAX_PRICE_VALUE = 1000000;
 const MIN_LABEL_LENGTH = 30;
 const MAX_LABEL_LENGTH = 150;
 const OFFER_TYPES_PRICE = {
@@ -52,38 +52,40 @@ const formRoomNumberArray = Array.from(formRoomNumberInput);
 
 formCapacityInput.addEventListener('change', (evt) => {
   formRoomNumberInput.value = evt.target.value;
+  // formCapacityInput.reportValidity();
 
-  formRoomNumberArray.forEach((option) => {
-    option.setAttribute('disabled' ,'disabled');
-  });
+  // formRoomNumberArray.forEach((option) => {
+  //   option.setAttribute('disabled' ,'disabled');
+  // });
 
-  switch (formCapacityInput.value) {
-    case '1':
-      formRoomNumberArray[0].removeAttribute('disabled', 'disabled');
-      formRoomNumberArray[1].removeAttribute('disabled', 'disabled');
-      formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
-      formCapacityInput.setCustomValidity('Вы можете выбрать номера на 1, 2, 3 комнаты');
-      break;
-    case '2':
-      formRoomNumberArray[1].removeAttribute('disabled', 'disabled');
-      formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
-      formCapacityInput.setCustomValidity('Вы можете выбрать номера на 2, 3 комнаты');
-      break;
-    case '3':
-      formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
-      formCapacityInput.setCustomValidity('Вы можете выбрать номера на 3 комнаты');
-      break;
-    case '0':
-      formRoomNumberInput.value = '100';
-      formRoomNumberArray[3].removeAttribute('disabled', 'disabled');
-      break;
-    default:
-      formCapacityInput.setCustomValidity('');
-  }
+  // switch (formCapacityInput.value) {
+  //   case '1':
+  //     // formRoomNumberArray[0].removeAttribute('disabled', 'disabled');
+  //     // formRoomNumberArray[1].removeAttribute('disabled', 'disabled');
+  //     // formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
+  //     // formCapacityInput.setCustomValidity('Вы можете выбрать номера на 1, 2, 3 комнаты');
+  //     break;
+  //   case '2':
+  //     // formRoomNumberArray[1].removeAttribute('disabled', 'disabled');
+  //     // formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
+  //     // formCapacityInput.setCustomValidity('Вы можете выбрать номера на 2, 3 комнаты');
+  //     break;
+  //   case '3':
+  //     // formRoomNumberArray[2].removeAttribute('disabled', 'disabled');
+  //     // formCapacityInput.setCustomValidity('Вы можете выбрать номера на 3 комнаты');
+  //     break;
+  //   case '0':
+  //     // formRoomNumberInput.value = '100';
+  //     // formRoomNumberArray[3].removeAttribute('disabled', 'disabled');
+  //     break;
+  //   default:
+  //     formCapacityInput.setCustomValidity('');
+  // }
 });
 
 formRoomNumberInput.addEventListener('change', (evt) => {
   formCapacityInput.value = evt.target.value;
+  formRoomNumberInput.reportValidity();
 
   formCapacityArray.forEach((option) => {
     option.setAttribute('disabled' ,'disabled');
@@ -92,19 +94,23 @@ formRoomNumberInput.addEventListener('change', (evt) => {
   switch (formRoomNumberInput.value) {
     case '1':
       formRoomNumberArray[0].removeAttribute('disabled', 'disabled');
+      // formRoomNumberInput.setCustomValidity('Допустимое количество гостей: 1');
       break;
     case '2':
       formCapacityArray[0].removeAttribute('disabled', 'disabled');
       formCapacityArray[1].removeAttribute('disabled', 'disabled');
+      // formRoomNumberInput.setCustomValidity('Допустимое количество гостей: 1 или 2');
       break;
     case '3':
       formCapacityArray[0].removeAttribute('disabled', 'disabled');
       formCapacityArray[1].removeAttribute('disabled', 'disabled');
       formCapacityArray[2].removeAttribute('disabled', 'disabled');
+      // formRoomNumberInput.setCustomValidity('Допустимое количество гостей: 1, 2 или 3');
       break;
     case '100':
       formCapacityInput.value = '0';
       formCapacityArray[3].removeAttribute('disabled', 'disabled');
+      // formRoomNumberInput.setCustomValidity('Допустимое количество гостей: не для гостей');
   }
 });
 

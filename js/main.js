@@ -1,9 +1,9 @@
 import {createObject} from './data.js';
 // import {createPopup} from './popup.js';
 import {disabledForm, activateForm} from './form.js';
-import {map} from './map.js';
+import {getMap} from './map.js';
 
-map;
+getMap();
 createObject();
 // createPopup(createObject());
 disabledForm();

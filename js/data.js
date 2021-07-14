@@ -40,7 +40,7 @@ const createObject = () => {
     author: UniqAvatarIndex,
     offer: {
       title: `Лучшее место на земле${getRandomPositiveInteger(0, 10)}`,
-      address: `${getRandomPositiveFloat(1, 3, 3)}, ${getRandomPositiveFloat(1, 3, 3)}`,
+      address: `${getRandomPositiveFloat(35.5, 35.8, 5)}, ${getRandomPositiveFloat(139.5, 139.8, 5)}`,
       price: getRandomPositiveInteger(50, 400),
       type: getRandomArrayElement(Object.keys(OFFER_TYPES)),
       rooms: getRandomPositiveInteger(0, 10),

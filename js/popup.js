@@ -1,12 +1,6 @@
 import {OFFER_TYPES} from './data.js';
 import {createImage, createListItem} from './utils.js';
 
-const similarCardTemplate = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
-const cardElement = similarCardTemplate.cloneNode(true);
-const popupPhotos = cardElement.querySelector('.popup__photos');
-
 const getPhotosListFragment = (photos) => {
   const popupPhotosFragment = document.createDocumentFragment();
 
@@ -17,9 +11,6 @@ const getPhotosListFragment = (photos) => {
 
   return popupPhotosFragment;
 };
-
-const popupFeatures = cardElement.querySelector('.popup__features');
-popupFeatures.innerHTML = '';
 
 const getFeaturesListFragment = (features) => {
   const popupFeaturesFragment = document.createDocumentFragment();
@@ -33,8 +24,17 @@ const getFeaturesListFragment = (features) => {
 };
 
 const createPopup = (cardData) =>{
-  const mapContainer = document.querySelector('.map__canvas');
-  mapContainer.children;
+  // const mapContainer = document.querySelector('.map__canvas');
+  // mapContainer.children;
+  const similarCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.popup');
+  const cardElement = similarCardTemplate.cloneNode(true);
+  const popupPhotos = cardElement.querySelector('.popup__photos');
+
+  const popupFeatures = cardElement.querySelector('.popup__features');
+  popupFeatures.innerHTML = '';
+
 
   cardElement.querySelector('.popup__title').textContent = cardData.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = cardData.offer.address;
@@ -47,7 +47,8 @@ const createPopup = (cardData) =>{
   popupPhotos.appendChild(getPhotosListFragment(cardData.offer.photos));
   cardElement.querySelector('.popup__avatar').src = cardData.author;
 
-  mapContainer.appendChild(cardElement);
+  // mapContainer.appendChild(cardElement);
+  return cardElement;
 };
 
 export {createPopup};

@@ -2,7 +2,13 @@ import {activateForm} from './form.js';
 import {getSimilarObjects} from './data.js';
 import {createPopup} from './popup.js';
 
-const STARTING_COORDINATES = 'LatLng(35.68950, 139.69171)';
+const STARTING_COORDINATES = {
+  lat: '35.68950',
+  lng: '139.69171',
+};
+
+const setCoordinatesValue = ({lat, lng}) => `LatLng(${lat}, ${lng})`;
+
 
 const adFormAdressInput = document.querySelector('#address');
 
@@ -39,11 +45,15 @@ const getMap = () => {
     },
   );
 
-  adFormAdressInput.value = STARTING_COORDINATES;
+  adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
 
   mainPinMarker.on('moveend', (evt) => {
-    const coordinats = evt.target.getLatLng();
-    adFormAdressInput.value = coordinats;
+    const coordinates = evt.target.getLatLng();
+
+    coordinates.lat = coordinates.lat.toFixed(5);
+    coordinates.lng = coordinates.lng.toFixed(5);
+
+    adFormAdressInput.value = setCoordinatesValue(coordinates);
   });
 
   mainPinMarker.addTo(map);

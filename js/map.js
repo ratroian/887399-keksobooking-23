@@ -1,5 +1,5 @@
 import {activateForm} from './form.js';
-import {getSimilarObjects} from './data.js';
+// import {getSimilarObjects} from './data.js';
 import {createPopup} from './popup.js';
 
 const STARTING_COORDINATES = {
@@ -7,12 +7,33 @@ const STARTING_COORDINATES = {
   lng: '139.69171',
 };
 
-const setCoordinatesValue = ({lat, lng}) => `LatLng(${lat}, ${lng})`;
-
-
 const adFormAdressInput = document.querySelector('#address');
 
-const getMap = () => {
+const setCoordinatesValue = ({lat, lng}) => `LatLng(${lat}, ${lng})`;
+
+const getStartingCoordinats = () => adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
+
+const mainPinIcon = L.icon({
+  iconUrl: '../img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchor: [26, 52],
+});
+
+const mainPinMarker = L.marker(
+  STARTING_COORDINATES,
+  {
+    draggable: true,
+    icon: mainPinIcon,
+  },
+);
+
+const setDefaultCoordinates = () => {
+  mainPinMarker.setLatLng(STARTING_COORDINATES);
+  adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
+
+};
+
+const getMap = (offers) => {
   const map = L.map('map')
     .on('load', () => {
       activateForm();
@@ -28,24 +49,14 @@ const getMap = () => {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>'},
   ).addTo(map);
 
-  const mainPinIcon = L.icon({
-    iconUrl: '../img/main-pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+
+  const regularAdsIcon = L.icon({
+    iconUrl: '../img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
   });
 
-  const mainPinMarker = L.marker(
-    {
-      lat: 35.68950,
-      lng: 139.69171,
-    },
-    {
-      draggable: true,
-      icon: mainPinIcon,
-    },
-  );
-
-  adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
+  getStartingCoordinats();
 
   mainPinMarker.on('moveend', (evt) => {
     const coordinates = evt.target.getLatLng();
@@ -58,24 +69,12 @@ const getMap = () => {
 
   mainPinMarker.addTo(map);
 
-  const points = getSimilarObjects();
-
-  const regularAdsIcon = L.icon({
-    iconUrl: '../img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
   const markerGroup = L.layerGroup().addTo(map);
 
   const createMarker = (item) => {
-    const addresses = item.offer.address.split(', ');
 
     const marker = L.marker(
-      {
-        lat: addresses[0],
-        lng: addresses[1],
-      },
+      item.location,
       {
         regularAdsIcon,
       },
@@ -90,10 +89,11 @@ const getMap = () => {
         },
       );
   };
-
-  points.forEach((point) => {
-    createMarker(point);
-  });
+  if (offers.length) {
+    offers.forEach((point) => {
+      createMarker(point);
+    });
+  }
 };
 
-export {getMap};
+export {getMap, getStartingCoordinats, setDefaultCoordinates};

@@ -1,4 +1,6 @@
-import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled} from './utils.js';
+import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled, showMessageError} from './utils.js';
+import {getStartingCoordinats, setDefaultCoordinates} from './map.js';
+import {sendData} from './api.js';
 
 const DISABLED_FORM_CLASSNAME = 'ad-form--disabled';
 const MAX_PRICE_VALUE = 1000000;
@@ -25,6 +27,7 @@ const adFormTypeList = adForm.querySelector('#type');
 const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 const adFormElementTime = adForm.querySelector('.ad-form__element--time');
+const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
 const disabledForm = () => {
   addClassName(adForm, DISABLED_FORM_CLASSNAME);
@@ -48,7 +51,6 @@ const activateForm = () => {
 
 const formCapacityArray = Array.from(formCapacityInput);
 const formRoomNumberArray = Array.from(formRoomNumberInput);
-
 
 formCapacityInput.addEventListener('change', (evt) => {
   formRoomNumberInput.value = evt.target.value;
@@ -95,6 +97,11 @@ adFormLabelInput.addEventListener('input', () => {
   adFormLabelInput.reportValidity();
 });
 
+const resetFormLabelInput = () => {
+  adForm.reset();
+  setDefaultCoordinates();
+};
+
 adFormPriceInput.addEventListener('input', () => {
   if (adFormPriceInput.value > MAX_PRICE_VALUE) {
     adFormPriceInput.setCustomValidity(`Максимальная сумма  ${MAX_PRICE_VALUE} руб.`);
@@ -127,4 +134,24 @@ adFormElementTime.addEventListener('change', (evt) => {
   adFormTimeOut.value = evt.target.value;
 });
 
-export {disabledForm, activateForm};
+const setUserFormSubmit = (onSuccess) => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      onSuccess,
+      showMessageError,
+      new FormData(evt.target),
+    );
+  });
+};
+
+adFormResetButton.addEventListener('click', (evt) =>{
+  evt.preventDefault();
+
+  resetFormLabelInput();
+  getStartingCoordinats();
+});
+
+
+export {disabledForm, activateForm, setUserFormSubmit, resetFormLabelInput};

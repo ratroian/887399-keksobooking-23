@@ -50,5 +50,63 @@ const removeAttributeDisabled = (elements) => {
   elements.forEach((element) => element.removeAttribute('disabled', 'disabled'));
 };
 
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const body = document.querySelector('body');
+let messageTemplate;
+let messageElement;
+
+const deletedMessage = () => {
+  messageElement.remove();
+};
+
+const onPopupEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    deletedMessage();
+    body.removeEventListener('keydown', onPopupEscKeydown);
+  }
+};
+
+const showMessageSuccess = () => {
+  messageTemplate = document.querySelector('#success').content.querySelector('.success');
+  messageElement = messageTemplate.cloneNode(true);
+
+  body.appendChild(messageElement);
+
+  body.addEventListener('click', deletedMessage, {once: true});
+
+  body.addEventListener('keydown', onPopupEscKeydown);
+};
+
+const showMessageError = () => {
+  // const body = document.querySelector('body');
+  messageTemplate = document.querySelector('#error').content.querySelector('.error');
+  const closeErrorButton = messageTemplate.querySelector('.error__button');
+  messageElement = messageTemplate.cloneNode(true);
+  // const messageElement = messageTemplate.cloneNode(true);
+
+  body.appendChild(messageElement);
+
+  // messageElement.addEventListener('click', deletedMessage.bind(null, messageElement), {once: true});
+  body.addEventListener('click', deletedMessage, {once: true});
+
+  // body.addEventListener('keydown', () => {
+  //   if(isEscEvent) {
+  //     messageElement.remove();
+  //     body.removeEventListener('keydown', () => {});
+  //   }
+  // });
+  body.addEventListener('keydown', onPopupEscKeydown);
+
+  // if (closeErrorButton) {
+  //   closeErrorButton.addEventListener('click', () => {
+  //     messageElement.remove();
+  //     closeErrorButton.removeEventListener('click', () => {});
+  //   });
+  // }
+  closeErrorButton.addEventListener('click', deletedMessage, {once: true});
+};
+
 export {getRandomPositiveFloat, getRandomPositiveInteger, createImage, createListItem,
-  addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled};
+  addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled, isEscEvent, showMessageSuccess,
+  showMessageError};

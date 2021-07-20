@@ -1,18 +1,11 @@
-import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled, showMessageError} from './utils.js';
+import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled} from './utils.js';
 import {getStartingCoordinats, setDefaultCoordinates} from './map.js';
 import {sendData} from './api.js';
+import {showMessageError} from './user-popup.js';
+import {DISABLED_FORM_CLASSNAME, MAX_PRICE_VALUE,
+  MIN_LABEL_LENGTH, MAX_LABEL_LENGTH, OFFER_TYPES_PRICE} from './data.js';
 
-const DISABLED_FORM_CLASSNAME = 'ad-form--disabled';
-const MAX_PRICE_VALUE = 1000000;
-const MIN_LABEL_LENGTH = 30;
-const MAX_LABEL_LENGTH = 150;
-const OFFER_TYPES_PRICE = {
-  'palace': 10000,
-  'flat': 1000,
-  'house': 5000,
-  'bungalow': 0,
-  'hotel': 3000,
-};
+
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const mapFiltersElements = mapFilters.querySelectorAll('.map__filter');
@@ -152,6 +145,5 @@ adFormResetButton.addEventListener('click', (evt) =>{
   resetFormLabelInput();
   getStartingCoordinats();
 });
-
 
 export {disabledForm, activateForm, setUserFormSubmit, resetFormLabelInput};

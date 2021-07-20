@@ -1,11 +1,6 @@
 import {activateForm} from './form.js';
-// import {getSimilarObjects} from './data.js';
 import {createPopup} from './popup.js';
-
-const STARTING_COORDINATES = {
-  lat: '35.68950',
-  lng: '139.69171',
-};
+import {STARTING_COORDINATES} from './data.js';
 
 const adFormAdressInput = document.querySelector('#address');
 
@@ -30,7 +25,42 @@ const mainPinMarker = L.marker(
 const setDefaultCoordinates = () => {
   mainPinMarker.setLatLng(STARTING_COORDINATES);
   adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
+};
 
+const regularAdsIcon = L.icon({
+  iconUrl: '../img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+const markerGroup = L.layerGroup();
+
+const createMarker = (item) => {
+  const marker = L.marker(
+    item.location,
+    {
+      regularAdsIcon,
+    },
+  );
+
+  marker
+    .addTo(markerGroup)
+    .bindPopup(
+      createPopup(item),
+      {
+        keepInView: true,
+      },
+    );
+};
+
+const getMarkerGroup = (offers) => {
+  markerGroup.clearLayers();
+
+  if (offers.length) {
+    offers.forEach((point) => {
+      createMarker(point);
+    });
+  }
 };
 
 const getMap = (offers) => {
@@ -49,13 +79,6 @@ const getMap = (offers) => {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>'},
   ).addTo(map);
 
-
-  const regularAdsIcon = L.icon({
-    iconUrl: '../img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
   getStartingCoordinats();
 
   mainPinMarker.on('moveend', (evt) => {
@@ -68,32 +91,8 @@ const getMap = (offers) => {
   });
 
   mainPinMarker.addTo(map);
-
-  const markerGroup = L.layerGroup().addTo(map);
-
-  const createMarker = (item) => {
-
-    const marker = L.marker(
-      item.location,
-      {
-        regularAdsIcon,
-      },
-    );
-
-    marker
-      .addTo(markerGroup)
-      .bindPopup(
-        createPopup(item),
-        {
-          keepInView: true,
-        },
-      );
-  };
-  if (offers.length) {
-    offers.forEach((point) => {
-      createMarker(point);
-    });
-  }
+  markerGroup.addTo(map);
+  getMarkerGroup(offers);
 };
 
-export {getMap, getStartingCoordinats, setDefaultCoordinates};
+export {getMap, getStartingCoordinats, setDefaultCoordinates, getMarkerGroup};

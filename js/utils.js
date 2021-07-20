@@ -52,61 +52,27 @@ const removeAttributeDisabled = (elements) => {
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const body = document.querySelector('body');
-let messageTemplate;
-let messageElement;
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
 
-const deletedMessage = () => {
-  messageElement.remove();
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
 };
 
-const onPopupEscKeydown = (evt) => {
-  if (isEscEvent(evt)) {
-    deletedMessage();
-    body.removeEventListener('keydown', onPopupEscKeydown);
-  }
-};
+const throttle = (callback, delayBetweenFrames) => {
+  let lastTime = 0;
 
-const showMessageSuccess = () => {
-  messageTemplate = document.querySelector('#success').content.querySelector('.success');
-  messageElement = messageTemplate.cloneNode(true);
+  return (...rest) => {
+    const now = new Date();
 
-  body.appendChild(messageElement);
-
-  body.addEventListener('click', deletedMessage, {once: true});
-
-  body.addEventListener('keydown', onPopupEscKeydown);
-};
-
-const showMessageError = () => {
-  // const body = document.querySelector('body');
-  messageTemplate = document.querySelector('#error').content.querySelector('.error');
-  const closeErrorButton = messageTemplate.querySelector('.error__button');
-  messageElement = messageTemplate.cloneNode(true);
-  // const messageElement = messageTemplate.cloneNode(true);
-
-  body.appendChild(messageElement);
-
-  // messageElement.addEventListener('click', deletedMessage.bind(null, messageElement), {once: true});
-  body.addEventListener('click', deletedMessage, {once: true});
-
-  // body.addEventListener('keydown', () => {
-  //   if(isEscEvent) {
-  //     messageElement.remove();
-  //     body.removeEventListener('keydown', () => {});
-  //   }
-  // });
-  body.addEventListener('keydown', onPopupEscKeydown);
-
-  // if (closeErrorButton) {
-  //   closeErrorButton.addEventListener('click', () => {
-  //     messageElement.remove();
-  //     closeErrorButton.removeEventListener('click', () => {});
-  //   });
-  // }
-  closeErrorButton.addEventListener('click', deletedMessage, {once: true});
+    if (now - lastTime >= delayBetweenFrames) {
+      callback.apply(this, rest);
+      lastTime = now;
+    }
+  };
 };
 
 export {getRandomPositiveFloat, getRandomPositiveInteger, createImage, createListItem,
-  addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled, isEscEvent, showMessageSuccess,
-  showMessageError};
+  addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled, isEscEvent, debounce, throttle};

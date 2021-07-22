@@ -3,8 +3,8 @@ import {getStartingCoordinats, setDefaultCoordinates} from './map.js';
 import {sendData} from './api.js';
 import {showMessageError} from './user-popup.js';
 import {DISABLED_FORM_CLASSNAME, MAX_PRICE_VALUE,
-  MIN_LABEL_LENGTH, MAX_LABEL_LENGTH, OFFER_TYPES_PRICE} from './data.js';
-
+  MIN_LABEL_LENGTH, MAX_LABEL_LENGTH, OFFER_TYPES_PRICE, STYLE_ERROR_FIELD} from './data.js';
+import {startListenerPreview} from './preview-photo.js';
 
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -22,7 +22,7 @@ const adFormTimeOut = adForm.querySelector('#timeout');
 const adFormElementTime = adForm.querySelector('.ad-form__element--time');
 const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
-const disabledForm = () => {
+const blockTheForm = () => {
   addClassName(adForm, DISABLED_FORM_CLASSNAME);
   addClassName(mapFilters, DISABLED_FORM_CLASSNAME);
   addClassName(mapFeatures, DISABLED_FORM_CLASSNAME);
@@ -40,10 +40,12 @@ const activateForm = () => {
   removeAttributeDisabled(adFormElements);
   removeAttributeDisabled(mapFiltersElements);
   removeAttributeDisabled(mapFeaturesElements);
+
+  startListenerPreview();
 };
 
-const formCapacityArray = Array.from(formCapacityInput);
-const formRoomNumberArray = Array.from(formRoomNumberInput);
+const formCapacityVariants = Array.from(formCapacityInput);
+const formRoomsNumberVariants = Array.from(formRoomNumberInput);
 
 formCapacityInput.addEventListener('change', (evt) => {
   formRoomNumberInput.value = evt.target.value;
@@ -53,26 +55,26 @@ formRoomNumberInput.addEventListener('change', (evt) => {
   formCapacityInput.value = evt.target.value;
   formRoomNumberInput.reportValidity();
 
-  formCapacityArray.forEach((option) => {
+  formCapacityVariants.forEach((option) => {
     option.setAttribute('disabled' ,'disabled');
   });
 
   switch (formRoomNumberInput.value) {
     case '1':
-      formRoomNumberArray[0].removeAttribute('disabled', 'disabled');
+      formRoomsNumberVariants[0].removeAttribute('disabled', 'disabled');
       break;
     case '2':
-      formCapacityArray[0].removeAttribute('disabled', 'disabled');
-      formCapacityArray[1].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[0].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[1].removeAttribute('disabled', 'disabled');
       break;
     case '3':
-      formCapacityArray[0].removeAttribute('disabled', 'disabled');
-      formCapacityArray[1].removeAttribute('disabled', 'disabled');
-      formCapacityArray[2].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[0].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[1].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[2].removeAttribute('disabled', 'disabled');
       break;
     case '100':
       formCapacityInput.value = '0';
-      formCapacityArray[3].removeAttribute('disabled', 'disabled');
+      formCapacityVariants[3].removeAttribute('disabled', 'disabled');
   }
 });
 
@@ -81,12 +83,17 @@ adFormLabelInput.addEventListener('input', () => {
 
   if (valueLength < MIN_LABEL_LENGTH) {
     adFormLabelInput.setCustomValidity(`Ещё ${MIN_LABEL_LENGTH - valueLength} симв.`);
+
   } else if (valueLength > MAX_LABEL_LENGTH) {
     adFormLabelInput.setCustomValidity(`Удалите лишние ${valueLength - MAX_LABEL_LENGTH} симв.`);
   } else {
     adFormLabelInput.setCustomValidity('');
   }
 
+  if (!adFormLabelInput.validity.valid) {
+    adFormLabelInput.style.outline = STYLE_ERROR_FIELD;
+  } else {adFormLabelInput.style.outline= '';
+  }
   adFormLabelInput.reportValidity();
 });
 
@@ -97,11 +104,16 @@ const resetFormLabelInput = () => {
 
 adFormPriceInput.addEventListener('input', () => {
   if (adFormPriceInput.value > MAX_PRICE_VALUE) {
-    adFormPriceInput.setCustomValidity(`Максимальная сумма  ${MAX_PRICE_VALUE} руб.`);
+    adFormPriceInput.setCustomValidity(`Максимальная цена  ${MAX_PRICE_VALUE} руб.`);
+  } else if (adFormPriceInput.value < OFFER_TYPES_PRICE[adFormTypeList.value]) {
+    adFormPriceInput.setCustomValidity(`Минимальная цена  ${OFFER_TYPES_PRICE[adFormTypeList.value]} руб.`);
   } else {
     adFormPriceInput.setCustomValidity('');
   }
-
+  if (!adFormPriceInput.validity.valid) {
+    adFormPriceInput.style.outline = STYLE_ERROR_FIELD;
+  } else {adFormPriceInput.style.outline= '';
+  }
   adFormPriceInput.reportValidity();
 });
 
@@ -127,6 +139,10 @@ adFormElementTime.addEventListener('change', (evt) => {
   adFormTimeOut.value = evt.target.value;
 });
 
+adForm.addEventListener('invalid', (evt) => {
+  evt.target.style.outline = STYLE_ERROR_FIELD;
+}, true);
+
 const setUserFormSubmit = (onSuccess) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -146,4 +162,4 @@ adFormResetButton.addEventListener('click', (evt) =>{
   getStartingCoordinats();
 });
 
-export {disabledForm, activateForm, setUserFormSubmit, resetFormLabelInput};
+export {blockTheForm, activateForm, setUserFormSubmit, resetFormLabelInput};

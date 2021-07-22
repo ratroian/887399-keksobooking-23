@@ -1,17 +1,19 @@
 import {activateForm} from './form.js';
 import {createPopup} from './popup.js';
-import {STARTING_COORDINATES} from './data.js';
+import {STARTING_COORDINATES, MAP_ZOOM_LEVEL, MAX_QUANTITY_ADS, MAIN_PIN_ICON_SIZE, MAIN_PIN_ICON_ANCHOR,
+  REGULAR_ADS_ICON_SIZE, REGULAR_ADS_ICON_ANCHOR} from './data.js';
+import { getData } from './api.js';
 
 const adFormAdressInput = document.querySelector('#address');
 
-const setCoordinatesValue = ({lat, lng}) => `LatLng(${lat}, ${lng})`;
+const setCoordinatesValue = ({lat, lng}) => `${lat}, ${lng}`;
 
 const getStartingCoordinats = () => adFormAdressInput.value = setCoordinatesValue(STARTING_COORDINATES);
 
 const mainPinIcon = L.icon({
   iconUrl: '../img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconSize: MAIN_PIN_ICON_SIZE,
+  iconAnchor: MAIN_PIN_ICON_ANCHOR,
 });
 
 const mainPinMarker = L.marker(
@@ -29,11 +31,11 @@ const setDefaultCoordinates = () => {
 
 const regularAdsIcon = L.icon({
   iconUrl: '../img/pin.svg',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: REGULAR_ADS_ICON_SIZE,
+  iconAnchor: REGULAR_ADS_ICON_ANCHOR,
 });
 
-const markerGroup = L.layerGroup();
+const markersGroup = L.layerGroup();
 
 const createMarker = (item) => {
   const marker = L.marker(
@@ -44,7 +46,7 @@ const createMarker = (item) => {
   );
 
   marker
-    .addTo(markerGroup)
+    .addTo(markersGroup)
     .bindPopup(
       createPopup(item),
       {
@@ -53,8 +55,8 @@ const createMarker = (item) => {
     );
 };
 
-const getMarkerGroup = (offers) => {
-  markerGroup.clearLayers();
+const getMarkersGroup = (offers) => {
+  markersGroup.clearLayers();
 
   if (offers.length) {
     offers.forEach((point) => {
@@ -63,23 +65,21 @@ const getMarkerGroup = (offers) => {
   }
 };
 
-const getMap = (offers) => {
+const getMap = () => {
   const map = L.map('map')
-    .on('load', () => {
+    .on('load', async () => {
+      const offers = await getData();
       activateForm();
+      getStartingCoordinats();
+      getMarkersGroup(offers.slice(0, MAX_QUANTITY_ADS));
     })
-    .setView({
-      lat: 35.68950,
-      lng: 139.69171,
-    }, 10);
+    .setView(STARTING_COORDINATES, MAP_ZOOM_LEVEL);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>'},
   ).addTo(map);
-
-  getStartingCoordinats();
 
   mainPinMarker.on('moveend', (evt) => {
     const coordinates = evt.target.getLatLng();
@@ -91,8 +91,7 @@ const getMap = (offers) => {
   });
 
   mainPinMarker.addTo(map);
-  markerGroup.addTo(map);
-  getMarkerGroup(offers);
+  markersGroup.addTo(map);
 };
 
-export {getMap, getStartingCoordinats, setDefaultCoordinates, getMarkerGroup};
+export {getMap, getStartingCoordinats, setDefaultCoordinates, getMarkersGroup};

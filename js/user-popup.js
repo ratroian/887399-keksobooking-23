@@ -1,16 +1,16 @@
-import { isEscEvent } from './utils.js';
+import {isEscEvent} from './utils.js';
 
 const body = document.querySelector('body');
 let messageTemplate;
 let messageElement;
 
-const deletedMessage = () => {
+const messageDeleteHandler = () => {
   messageElement.remove();
 };
 
 const onPopupEscKeydown = (evt) => {
   if (isEscEvent(evt)) {
-    deletedMessage();
+    messageDeleteHandler();
     body.removeEventListener('keydown', onPopupEscKeydown);
   }
 };
@@ -21,7 +21,7 @@ const showMessageSuccess = () => {
 
   body.appendChild(messageElement);
 
-  body.addEventListener('click', deletedMessage, {once: true});
+  body.addEventListener('click', messageDeleteHandler, {once: true});
 
   body.addEventListener('keydown', onPopupEscKeydown);
 };
@@ -33,9 +33,9 @@ const showMessageError = () => {
 
   body.appendChild(messageElement);
 
-  body.addEventListener('click', deletedMessage, {once: true});
+  body.addEventListener('click', messageDeleteHandler, {once: true});
   body.addEventListener('keydown', onPopupEscKeydown);
-  closeErrorButton.addEventListener('click', deletedMessage, {once: true});
+  closeErrorButton.addEventListener('click', messageDeleteHandler, {once: true});
 };
 
 export {showMessageSuccess, showMessageError};

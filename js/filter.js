@@ -1,5 +1,5 @@
-import {getMarkerGroup} from './map.js';
-import {OFFERS_LIST} from './api.js';
+import {getMarkersGroup} from './map.js';
+import {ADS} from './api.js';
 import {debounce} from './utils.js';
 import {MAX_QUANTITY_ADS, DEBOUNCE_TIMEOUT_DELAY, PRICE_VALUES} from './data.js';
 
@@ -20,6 +20,7 @@ const filterByPrice = (ads, filterValue) => ads.filter((ad) => {
 
   return priceInterval[filterValue];
 });
+
 const filterByFeatures = (ads, featureValue) => ads.filter((ad) => ad.offer.features && ad.offer.features.indexOf(featureValue) >= 0);
 
 const filterNameToFilter = {
@@ -54,7 +55,7 @@ const startEventListener = () => {
       return;
     }
 
-    const withDebounce = debounce(() => getMarkerGroup(filterAds(OFFERS_LIST)), DEBOUNCE_TIMEOUT_DELAY);
+    const withDebounce = debounce(() => getMarkersGroup(filterAds(ADS)), DEBOUNCE_TIMEOUT_DELAY);
     withDebounce();
   });
 };

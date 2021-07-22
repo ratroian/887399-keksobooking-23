@@ -1,18 +1,24 @@
 import {resetFormLabelInput} from './form.js';
 import { getStartingCoordinats} from './map.js';
-import {MAX_QUANTITY_ADS} from './data.js';
+import {MESSAGE_ERROR} from './data.js';
+import {showAlert} from './utils.js';
 
-let OFFERS_LIST = [];
+let ADS = [];
 
-const getData = (onSuccess) =>{
+const getData = () =>
   fetch('https://23.javascript.pages.academy/keksobooking/data')
-    .then((response) => response.json())
+    .then((response) =>{
+      if (response.ok) {
+        return response;
+      }
+      throw new Error(showAlert(MESSAGE_ERROR));
+    }).then((response) => response.json())
     .then((offers) => {
-      OFFERS_LIST = [...offers];
-      onSuccess(offers.slice(0, MAX_QUANTITY_ADS));
+      ADS = [...offers];
+
+      return offers;
     })
-    .catch(() => onSuccess([]));
-};
+    .catch(() => []);
 
 const sendData = async (onSuccess, onFail, body) => {
   try {
@@ -37,4 +43,4 @@ const sendData = async (onSuccess, onFail, body) => {
   }
 };
 
-export {getData, sendData, OFFERS_LIST};
+export {getData, sendData, ADS};

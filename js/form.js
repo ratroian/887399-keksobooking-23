@@ -1,5 +1,5 @@
-import {addClassName, removeClassName, addAttributeDisabled, removeAttributeDisabled} from './utils.js';
-import {getStartingCoordinats, setDefaultCoordinates} from './map.js';
+import {removeClassName, removeAttributeDisabled} from './utils.js';
+import {getStartingCoordinats, setMapByDefault} from './map.js';
 import {sendData} from './api.js';
 import {showMessageError} from './user-popup.js';
 import {DISABLED_FORM_CLASSNAME, MAX_PRICE_VALUE,
@@ -11,7 +11,7 @@ const mapFilters = document.querySelector('.map__filters');
 const mapFiltersElements = mapFilters.querySelectorAll('.map__filter');
 const adFormElements = adForm.querySelectorAll('.ad-form__element');
 const mapFeatures = document.querySelector('.map__features');
-const mapFeaturesElements = mapFeatures.querySelectorAll('.map__checkbox');
+const mapFeaturesElements = mapFilters.querySelectorAll('#housing-features');
 const formRoomNumberInput = document.querySelector('#room_number');
 const formCapacityInput = document.querySelector('#capacity');
 const adFormLabelInput = adForm.querySelector('#title');
@@ -22,26 +22,20 @@ const adFormTimeOut = adForm.querySelector('#timeout');
 const adFormElementTime = adForm.querySelector('.ad-form__element--time');
 const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
-const blockTheForm = () => {
-  addClassName(adForm, DISABLED_FORM_CLASSNAME);
-  addClassName(mapFilters, DISABLED_FORM_CLASSNAME);
-  addClassName(mapFeatures, DISABLED_FORM_CLASSNAME);
-
-  addAttributeDisabled(adFormElements);
-  addAttributeDisabled(mapFiltersElements);
-  addAttributeDisabled(mapFeaturesElements);
-};
-
 const activateForm = () => {
   removeClassName(adForm, DISABLED_FORM_CLASSNAME);
+
+  removeAttributeDisabled(adFormElements);
+
+  startListenerPreview();
+};
+
+const activateMapFilters = () => {
   removeClassName(mapFilters, DISABLED_FORM_CLASSNAME);
   removeClassName(mapFeatures, DISABLED_FORM_CLASSNAME);
 
-  removeAttributeDisabled(adFormElements);
   removeAttributeDisabled(mapFiltersElements);
   removeAttributeDisabled(mapFeaturesElements);
-
-  startListenerPreview();
 };
 
 const formCapacityVariants = Array.from(formCapacityInput);
@@ -97,9 +91,10 @@ adFormLabelInput.addEventListener('input', () => {
   adFormLabelInput.reportValidity();
 });
 
-const resetFormLabelInput = () => {
+const resetForm = () => {
   adForm.reset();
-  setDefaultCoordinates();
+  mapFilters.reset();
+  setMapByDefault();
 };
 
 adFormPriceInput.addEventListener('input', () => {
@@ -158,8 +153,8 @@ const setUserFormSubmit = (onSuccess) => {
 adFormResetButton.addEventListener('click', (evt) =>{
   evt.preventDefault();
 
-  resetFormLabelInput();
+  resetForm();
   getStartingCoordinats();
 });
 
-export {blockTheForm, activateForm, setUserFormSubmit, resetFormLabelInput};
+export {activateForm, setUserFormSubmit, resetForm, activateMapFilters};

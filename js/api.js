@@ -1,4 +1,4 @@
-import {resetFormLabelInput} from './form.js';
+import {resetForm} from './form.js';
 import { getStartingCoordinats} from './map.js';
 import {MESSAGE_ERROR} from './data.js';
 import {showAlert} from './utils.js';
@@ -31,7 +31,7 @@ const sendData = async (onSuccess, onFail, body) => {
     );
 
     if (response.ok) {
-      resetFormLabelInput();
+      resetForm();
       getStartingCoordinats();
       onSuccess();
     } else {
